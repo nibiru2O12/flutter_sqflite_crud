@@ -12,6 +12,14 @@ class AddPage extends StatefulWidget {
 
 class _AddPageState extends State<AddPage> {
   Pet pet = Pet(id: 0, name: "", type: "");
+  final _formKeyState = GlobalKey<FormState>();
+  late FocusNode firstFieldFocus;
+
+  @override
+  void initState() {
+    super.initState();
+    firstFieldFocus = FocusNode();
+  }
 
   onChangeName(value) {
     setState(() {
@@ -25,6 +33,45 @@ class _AddPageState extends State<AddPage> {
     });
   }
 
+  onSuccess() {
+    _formKeyState.currentState!.reset();
+    firstFieldFocus.requestFocus();
+    setState(() {
+      pet = Pet(id: 0, name: "", type: "");
+    });
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text("Success"),
+            content: Text("Pet is added"),
+          );
+        });
+  }
+
+  onLoading() async {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(children: const [
+                CircularProgressIndicator(),
+                SizedBox(
+                  width: 20,
+                ),
+                Text("Saving")
+              ]),
+            ),
+          );
+        });
+
+    await Provider.of<PetController>(context, listen: false).addPet(pet);
+    Navigator.pop(context);
+    onSuccess();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,15 +79,14 @@ class _AddPageState extends State<AddPage> {
       bottomNavigationBar: BottomNavigationBar(items: [
         BottomNavigationBarItem(
             icon: InkWell(
-                onTap: () {
-                  Provider.of<PetController>(context, listen: false)
-                      .addPet(pet);
+                onTap: () async {
+                  onLoading();
                 },
-                child: Icon(Icons.save)),
+                child: const Icon(Icons.save)),
             label: "Save"),
         BottomNavigationBarItem(
             icon: InkWell(
-              child: Icon(Icons.cancel),
+              child: const Icon(Icons.cancel),
               onTap: () => Navigator.pop(context),
             ),
             label: "Cancel"),
@@ -50,14 +96,20 @@ class _AddPageState extends State<AddPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text("Animal Details"),
-            TextField(
-              onChanged: onChangeName,
-              decoration: InputDecoration(label: Text("Animal")),
-            ),
-            TextField(
-              onChanged: onChangeType,
-              decoration: InputDecoration(label: Text("Animal Type")),
+            const Text("Animal Details"),
+            Form(
+              key: _formKeyState,
+              child: Column(children: [
+                TextFormField(
+                  focusNode: firstFieldFocus,
+                  onChanged: onChangeName,
+                  decoration: const InputDecoration(label: Text("Animal")),
+                ),
+                TextFormField(
+                  onChanged: onChangeType,
+                  decoration: const InputDecoration(label: Text("Animal Type")),
+                ),
+              ]),
             )
           ],
         ),

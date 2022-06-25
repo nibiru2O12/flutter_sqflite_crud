@@ -1,3 +1,4 @@
+import 'package:flutter/animation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -10,6 +11,8 @@ class PetHelper {
   }
 
   Future<Database> initDb() async {
+    var dbpath = await getDatabasesPath();
+    print(dbpath);
     String path = join(await getDatabasesPath(), "animal_database.db");
 
     return await openDatabase(path, onCreate: createDb, version: 1);
@@ -23,8 +26,12 @@ class PetHelper {
 
   Future<int> insert(Pet animal) async {
     var db = await initDb();
-    return db.insert("animal", animal.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    try {
+      return await db.insert("animal", animal.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<void> update(Pet animal) async {
