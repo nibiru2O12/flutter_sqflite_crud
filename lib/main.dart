@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sql_crud/controller/pet_controller.dart';
 import 'package:sql_crud/model/pet.dart';
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: const MyHomePage(title: 'Pets'),
       ),
     );
   }
@@ -60,20 +62,29 @@ class _MyHomePageState extends State<MyHomePage> {
     var handler = Provider.of<PetController>(
       context,
     );
-    // var list = Provider.of<PetController>(context).getList();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Provider.of<PetController>(context, listen: false).deleteAll();
+              },
+              icon: const Icon(
+                Icons.delete,
+                color: Colors.red,
+              ))
+        ],
       ),
       body: FutureBuilder<List<Pet>>(
         future: handler.getList(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return CircularProgressIndicator();
-
-          if (!snapshot.hasData) return CircularProgressIndicator();
-
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          }
           var animals = snapshot.data ?? [];
           return ListView.builder(
               itemCount: animals.length,

@@ -45,4 +45,9 @@ class PetHelper {
       "animal",
     );
   }
+
+  Future<void> delete(int petId) async {
+    final db = await initDb();
+    await db.delete("animal", where: "id = ?", whereArgs: [petId]);
+  }
 }

@@ -21,4 +21,9 @@ class PetController extends ChangeNotifier {
     await PetHelper().deleteAll();
     notifyListeners();
   }
+
+  void delete(int petId) async {
+    await PetHelper().delete(petId);
+    notifyListeners();
+  }
 }

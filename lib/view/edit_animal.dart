@@ -37,7 +37,21 @@ class _EditPageState extends State<EditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Editing")),
+      appBar: AppBar(
+        title: const Text("Editing"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Provider.of<PetController>(context, listen: false)
+                    .delete(widget.pet.id);
+                Navigator.pop(context);
+              },
+              icon: const Icon(
+                Icons.delete_rounded,
+                color: Colors.red,
+              ))
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(items: [
         BottomNavigationBarItem(
             icon: InkWell(
