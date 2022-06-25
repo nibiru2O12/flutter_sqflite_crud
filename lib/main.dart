@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sql_crud/model/pet.dart';
+import 'package:sql_crud/model/pet_db.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,6 +20,12 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
+}
+
+fetchAnimalsFromDatabase() async {
+  final db = AnimalHelper();
+  Future<List<Pet>> animals = db.animals();
+  return animals;
 }
 
 class MyHomePage extends StatefulWidget {
@@ -44,23 +52,32 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: ListView.builder(itemBuilder: (context, index) {
-        return Dismissible(
-          key: UniqueKey(),
-          onDismissed: (direction) {},
-          child: ListTile(
-            onTap: () =>
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return EditPage();
-            })),
-            title: Text("animal ${index + 1}"),
-            trailing: const Text("type of aninamal"),
-          ),
-        );
-      }),
+      body: FutureBuilder(
+        future: fetchAnimalsFromDatabase(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return const CircularProgressIndicator();
+          return ListView.builder(itemBuilder: (context, index) {
+            return Dismissible(
+              key: UniqueKey(),
+              onDismissed: (direction) {},
+              child: ListTile(
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) {
+                  return EditPage();
+                })),
+                title: Text("animal ${index + 1}"),
+                trailing: const Text("type of aninamal"),
+              ),
+            );
+          });
+        },
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AddPage())),
+        onPressed: () {
+          final animal = Pet(id: 00, name: "Brix", type: "dog");
+          var db = AnimalHelper();
+          db.insert(animal);
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
