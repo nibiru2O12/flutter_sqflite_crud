@@ -1,9 +1,9 @@
 class Pet {
   final int id;
-  final String name;
-  final String type;
+  String name;
+  String type;
 
-  const Pet({required this.id, required this.name, required this.type});
+  Pet({required this.id, required this.name, required this.type});
 
   Pet.fromMap(Map<String, dynamic> map)
       : id = map["id"],
