@@ -7,10 +7,10 @@ class Pet {
 
   Pet.fromMap(Map<String, dynamic> map)
       : id = map["id"],
-        name = map["animal"],
-        type = map["type"];
+        name = map["name"],
+        type = map["classification"];
 
   Map<String, dynamic> toMap() {
-    return {"animal": name, "type": type};
+    return {"name": name, "classification": type};
   }
 }

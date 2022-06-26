@@ -1,21 +1,34 @@
 import 'dart:io';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:sql_crud/controller/pet_controller.dart';
 import 'package:sql_crud/model/pet.dart';
 import 'package:sql_crud/model/pet_db.dart';
 import 'package:provider/provider.dart';
 import 'package:sql_crud/view/add_animal.dart';
 import 'package:sql_crud/view/edit_animal.dart';
+import 'package:path/path.dart';
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

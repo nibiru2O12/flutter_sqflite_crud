@@ -24,7 +24,7 @@ class PetController extends ChangeNotifier {
   }
 
   Future<int> addPet(Pet animal) async {
-    return Future.delayed(Duration(seconds: 5), () async {
+    return Future.delayed(Duration(seconds: 1), () async {
       try {
         return await PetHelper()
             .insert(animal)
