@@ -1,0 +1,22 @@
+--
+-- File generated with SQLiteStudio v3.3.3 on Sun Jun 26 15:42:41 2022
+--
+-- Text encoding used: UTF-8
+--
+PRAGMA foreign_keys = off;
+BEGIN TRANSACTION;
+
+-- Table: pets
+CREATE TABLE pets (
+    id             INTEGER PRIMARY KEY,
+    name           TEXT,
+    classification TEXT
+);
+
+INSERT INTO pets (id, name, classification) VALUES (1, 'CC', 'Dog');
+INSERT INTO pets (id, name, classification) VALUES (2, 'brix', 'dog');
+INSERT INTO pets (id, name, classification) VALUES (3, 'ming ming', 'cat');
+INSERT INTO pets (id, name, classification) VALUES (4, 'clenton', 'dog');
+
+COMMIT TRANSACTION;
+PRAGMA foreign_keys = on;

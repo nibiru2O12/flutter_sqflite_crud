@@ -17,8 +17,22 @@ class PetHelper {
 
     String path = join(await getDatabasesPath(), "pet_database.db");
 
-    return await openDatabase(path,
-        onCreate: await copyDbFromAssets(), version: 1);
+    return await openDatabase(path, onCreate: await copyDbFromAssets(),
+        onUpgrade: (db, oldVersion, newVersion) {
+      if (oldVersion < newVersion) {
+        var migration = [
+          "  INSERT INTO pets (id, name, classification) VALUES (1, 'CC', 'Dog');",
+          "INSERT INTO pets (id, name, classification) VALUES (2, 'brix', 'dog');",
+          "INSERT INTO pets (id, name, classification) VALUES (3, 'ming ming', 'cat');",
+          "INSERT INTO pets (id, name, classification) VALUES (4, 'clenton', 'dog');"
+        ];
+        Batch batch = db.batch();
+        for (var m in migration) {
+          batch.rawInsert(m);
+        }
+        batch.commit();
+      }
+    }, version: 14);
   }
 
   createDb(Database db, int version) async {
